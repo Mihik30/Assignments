@@ -183,6 +183,7 @@ int main()
             {
                 case 1:
                     c.details();
+                    c.display_mini_balance();
                     break;
                 case 2:
                     c.get_balance();
