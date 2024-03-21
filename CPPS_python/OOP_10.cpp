@@ -1,9 +1,11 @@
 #include <iostream>
+#include <string>
 using namespace std;
 class account
 {
     protected:
-        int accout_number,type_of_account;
+        string accout_number;
+        int type_of_account;
         char name[100];
     public:
        
@@ -35,7 +37,7 @@ class account
 class current : virtual public account
 {
     protected:
-        int balance;//,checkbook;
+        int balance;
     public:
         void get_balance()
         {
@@ -140,6 +142,7 @@ class bank : public saving , public current
         }
         void all_details()
         {
+            details();
             display_savings();
             display_interest();
             display_balance();
@@ -157,7 +160,7 @@ int main()
     start:
     cout<<"Which accout do you want to create?\n press s for saving \n c for current \n a to display Overall account details: ";
     cin>>choose;
-    if(choose=='s')
+    if(choose=='s' || choose=='S')
     {
         
         while(true)
@@ -195,7 +198,7 @@ int main()
             }
         }
     }
-    else if(choose=='c')
+    else if(choose=='c' || choose=='C')
     {
         while(true)
         {
@@ -230,9 +233,9 @@ int main()
             }
         }
     }
-    else if(choose=='a')
+    else if(choose=='a' || choose=='A')
     {
-        cout<<"Overall details of your saving as well as current are:";
+        cout<<"Overall details of your saving as well as current are:"<<endl;
         b.all_details();
     }
     end: 
