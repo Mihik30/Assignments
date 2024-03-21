@@ -2,15 +2,11 @@
 using namespace std;
 class account
 {
-    private:
+    protected:
         int accout_number,type_of_account;
-        char name[10];
+        char name[100];
     public:
-        // void get_balance()
-        // {
-        //     cout<<"Enter the amount you want to deposit: ";
-        //     cin>>balence;
-        // }
+       
         void get_name()
         {
             cout<<"Enter your name: ";
@@ -21,10 +17,6 @@ class account
             cout<<"Enter your account number: ";
             cin>>accout_number;
         }
-        // void display_balance()
-        // {
-        //     cout<<"Balance: "<<balance;
-        // }
         void display_name()
         {
             cout<<"Name: "<<name<<endl;
@@ -40,9 +32,9 @@ class account
         }
     
 };
-class current : public account
+class current : virtual public account
 {
-    private:
+    protected:
         int balance;//,checkbook;
     public:
         void get_balance()
@@ -52,7 +44,7 @@ class current : public account
         }
         void display_balance()
         {
-            cout<<"Balance: "<<balance<<endl;
+            cout<<"Current accout Balance: "<<balance<<endl;
         }
         void display_mini_balance()
         {
@@ -65,13 +57,21 @@ class current : public account
         }
         void checkbook()
         {
-            cout<<"checkbook"<<endl;
+            if(balance>200)
+            {
+                cout<<"you are eligible for an checkbook"<<endl;
+            }
+            else
+            {
+                cout<<"you are not eligible for an checkbook"<<endl;
+            }
+            
         }
     
 };
-class saving: public account
+class saving: virtual public account
 {
-    private:
+    protected:
         int interest,months,withdrow,balance_saving;
     public:
         void get_savings()
@@ -81,7 +81,7 @@ class saving: public account
         }
         void display_savings()
         {
-            cout<<"Savings are : "<<balance_saving<<endl;
+            cout<<"Savings account balance : "<<balance_saving<<endl;
         }
         void get_interest()
         {
@@ -89,19 +89,19 @@ class saving: public account
             cin>>months;
             if(months==5)
             {
-                interest=(balance_saving*5*6)/100;                                  // ((6*balance_saving)/12)*5;
+                interest=(balance_saving*(5/12)*6)/100;                                  // ((6*balance_saving)/12)*5;
             }
             else if(months==8)
             {
-                interest=(balance_saving*8*7)/100;
+                interest=(balance_saving*(8/12)*7)/100;
             }
             else if(months==11)
             {
-                interest=(balance_saving*11*8)/100;
+                interest=(balance_saving*(11/12)*8)/100;
             }
             else if(months==15)
             {
-                interest=(balance_saving*15*9)/100;
+                interest=(balance_saving*(15/12)*9)/100;
             }
             else
             {
@@ -125,44 +125,69 @@ class saving: public account
         }
     
 };
+class bank : public saving , public current
+{
+    public:
+        void all_details_saving()
+        {
+            display_savings();
+            display_interest();
+        }
+        void all_details_current()
+        {
+            display_balance();
+            checkbook();
+        }
+        void all_details()
+        {
+            display_savings();
+            display_interest();
+            display_balance();
+            checkbook();
+        }
+        
+};
 int main()
 {
-    int x,x1;
+    int x;
     char choose;
-    current c;
-    saving s;
-    cout<<"Which accout do you want to create? press s for saving & c for current: ";
+    bank b;
+    b.get_name();
+    b.get_accountno();
+    start:
+    cout<<"Which accout do you want to create?\n press s for saving \n c for current \n a to display Overall account details: ";
     cin>>choose;
     if(choose=='s')
     {
-        s.get_name();
-        s.get_accountno();
+        
         while(true)
         {
-            cout<<endl<<"Enter 1 to display your details\nEnter 2 to deposit money to your savings account\nEnter 3 to create an FD\nEnter 4 withdrow money from your account\nEnter 5 to display current balance\nEnter 6 to display interest\npress 7 to exit! "<<endl;
+            cout<<endl<<"Enter 1 to display your details\nEnter 2 to deposit money to your savings account\nEnter 3 to create an FD\nEnter 4 withdrow money from your account\nEnter 5 to display current balance\nEnter 6 to display interest\npress 7 to exit!\npress 8 to enter main menu "<<endl;
             cin>>x;    
             switch(x)
             {
                 case 1:
-                    s.details();
+                    b.all_details_saving();
                     break;
                 case 2:
-                    s.get_savings();
+                    b.get_savings();
                     break;
                 case 3:
-                    s.get_interest();
+                    b.get_interest();
                     break;
                 case 4:
-                    s.withdroww();
+                    b.withdroww();
                     break;
                 case 5:
-                    s.display_savings();
+                    b.display_savings();
                     break;
                 case 6:
-                    s.display_interest();
+                    b.display_interest();
                     break;
                 case 7:
                     goto end;
+                case 8:
+                    goto start;
                 default:
                     cout<<"Enter an correct option!,try again";
                 
@@ -172,33 +197,32 @@ int main()
     }
     else if(choose=='c')
     {
-        c.get_name();
-        c.get_accountno();
-        c.get_balance();
         while(true)
         {
-            cout<<endl<<"Enter 1 to display your details\nEnter 2 to deposit money to your current account\nEnter 3 to access checkbook\nEnter 4 to display current balance\npress 5 to exit!"<<endl;
-            cin>>x1;    
-            switch(x1)
+            cout<<endl<<"Enter 1 to display your details\nEnter 2 to deposit money to your current account\nEnter 3 to access checkbook\nEnter 4 to display current balance\npress 5 to exit!\npress 6 to enter main menu"<<endl;
+            cin>>x;    
+            switch(x)
             {
                 case 1:
-                    c.details();
-                    c.display_mini_balance();
+                    b.all_details_current();
+                    b.display_mini_balance();
                     break;
                 case 2:
-                    c.get_balance();
-                    c.display_mini_balance();
+                    b.get_balance();
+                    b.display_mini_balance();
                     break;
                 case 3:
-                    c.checkbook();
-                    c.display_mini_balance();
+                    b.checkbook();
+                    b.display_mini_balance();
                     break;
                 case 4:
-                    c.display_balance();
-                    c.display_mini_balance();
+                    b.display_balance();
+                    b.display_mini_balance();
                     break;
                 case 5:
                     goto end;
+                case 6:
+                    goto start;
                 default:
                     cout<<"Enter an correct option!,try again";
                 
@@ -206,9 +230,10 @@ int main()
             }
         }
     }
-    else
+    else if(choose=='a')
     {
-        cout<<"invalid choice";
+        cout<<"Overall details of your saving as well as current are:";
+        b.all_details();
     }
     end: 
         cout<<"Happy banking!";
