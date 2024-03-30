@@ -65,3 +65,33 @@ int main()
     
     return 0;
 }
+
+
+
+//linear search
+#include <iostream>
+using namespace std;
+template<class T>
+void sort(T arr[] , T n , T keyval)
+{
+    for(int i = 0 ; i < n ; i++)
+    {
+        if(arr[i]==keyval)
+        {
+            cout<<"value at position "<<i+1<<endl;
+        }
+    }
+}
+int main()
+{
+    int arr[] = {1,2,3,4,5,6,7,8,9,10},keyval=2,n=10;
+    sort(arr , n , keyval);
+    
+    float arr2[] = {1.95,2.38,3.69,4.86,5.14,6.22,7.76,8.890,9.5,16.8},keyval2=3.65,n2=10;
+    sort(arr2 , n2 , keyval2);
+    
+    char arr1[] = {'j','t','q','i','o','p','e','x','k','c'},keyval1='x',n1=10;
+    sort(arr1 , n1 , keyval1);
+    return 0;
+}
+
