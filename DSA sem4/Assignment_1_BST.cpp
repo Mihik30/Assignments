@@ -13,6 +13,7 @@ dictionary should support the following operations efficiently:
 
 #include <iostream>
 #include <queue>
+#include <stack>
 #include <utility>
 using namespace std;
 
@@ -128,7 +129,30 @@ void Inorder(node* &root)
 	cout<<root->key << " : "<<root->word<<endl;
 	Inorder(root->right);
 }
+void inOrderTraversal(node *root)
+{
+	stack<node *> treeStack;
+	node *currentNode = root;
 
+	while (currentNode != NULL || treeStack.empty() == false)
+	{
+        //condition to check if the node is leftmost node 
+		while (currentNode != NULL)
+		{
+			// step 3 of our algorithm
+			treeStack.push(currentNode);
+			currentNode = currentNode->left;
+		}
+		
+		currentNode = treeStack.top();
+		treeStack.pop();
+        // cout statement to print the node data
+		cout << currentNode->data <<" ";
+        
+        // statement to process right subtree 
+		currentNode = currentNode->right;
+	} 
+}
 bool SearchRecursive(node* &root , string del)
 {
 	if(root == NULL)
