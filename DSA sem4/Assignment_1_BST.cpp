@@ -74,21 +74,30 @@ void levelOrderTraversal(node* root)
 
 node* InsertBST(node* &root, string word , int key)
 {
-	
+    
 	if(root==NULL)
 	{
 		root = new node(word , key);
 		return root;
 	}
 	
+	
 	if(key > root->key)
 	{
 		InsertBST(root->right , word , key);
 	}
-	else
+	else if(key < root->key)
 	{
 		InsertBST(root->left , word , key);
 	}
+	else if(root->key == key)
+	{
+	    cout<<"Already Present"<<endl;
+	    return root;
+	}
+	
+	return root;
+	
 }
 void TakeInput(node* &root)
 {
@@ -147,32 +156,59 @@ void inOrderTraversal(node *root)
 		currentNode = treeStack.top();
 		treeStack.pop();
         // cout statement to print the node data
-		cout << currentNode->data <<" ";
+		cout << currentNode->key <<" ";
         
         // statement to process right subtree 
 		currentNode = currentNode->right;
 	} 
 }
-bool SearchRecursive(node* &root , string del)
+
+
+bool SearchRecursive(node* root , string del)
 {
-	if(root == NULL)
+	if(root==NULL)
 	{
 		return false;
 	}
 	
-	if(root->word == del)
-	{
-		return true;
-	}
-	
-	if(root->word > del)
-	{
-		SearchRecursive(root->left , del);
-	}
-	else
+	if(del > root->word)
 	{
 		SearchRecursive(root->right , del);
 	}
+	else if(del < root->word)
+	{
+		SearchRecursive(root->left , del);
+	}
+	else if(root->word == del)
+	{
+	    return true;
+	}
+	
+	return false;
+	
+}
+
+bool Searchitrative(node* root , int k)
+{
+    node* temp = root;
+    while(temp!=NULL)
+    {
+        if (temp->key == k)
+        {
+            return true;
+        }
+        
+        else if(temp->key > k)
+        {
+            temp = temp->left;
+        }
+        else if(temp->key < k)
+        {
+            temp = temp->right;
+        }
+    }
+    
+    return false;
 }
 
 node* DeleteNode(node* &root , int val)
@@ -238,7 +274,7 @@ int main()
 {
 	node* root = NULL;
 	int c,del,key;
-	string sec, keyval1 , word;
+	string keyval1 , word,sec;
 	do
 	{
 		cout<<endl<<"1. Insert word\n2. Delete word\n3. Search specific word\n4. Display dictionary (InOrder)\n5. Mirror image of dictionary\n6. Create a copy of dictionary\n7. Display dictionary level wise\n8. Exit\n9. Continuous Input :"<<endl;         
@@ -261,7 +297,7 @@ int main()
 			case 3:
 				cout<<endl<<"Enter the word you want to search : ";
 				cin>>sec;
-				keyval1 = (SearchRecursive(root , sec) == 1) ? "Value found using recursive method" : "Valuse not found" ;
+				keyval1 = (SearchRecursive(root , sec) == true) ? "Value found using recursive method" : "Valuse not found" ;
 				cout<<keyval1;
 				break;
 			case 4:
