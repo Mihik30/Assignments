@@ -68,7 +68,7 @@ void levelOrderTraversal(node* root)
 	    }
 	    
 	}
-	cout<<endl<<"Number of Nodes are : "<<noofnodes<<endl;
+// 	cout<<endl<<"Number of Nodes are : "<<noofnodes<<endl;
 }
 
 
@@ -90,7 +90,7 @@ node* InsertBST(node* &root, string word , int key)
 	{
 		InsertBST(root->left , word , key);
 	}
-	else if(root->key == key)
+	else if(root->key == key) //this is to not accept duplicate values
 	{
 	    cout<<"Already Present"<<endl;
 	    return root;
@@ -270,14 +270,26 @@ node* DeleteNode(node* &root , int val)
 	return root;
 }
 
+void mirror(node* root) {
+    if (root == nullptr)
+        return ;
+    
+    // Invert the left and right subtree
+    mirror(root->left);
+    mirror(root->right);
+  
+    // Swap the left and right subtree
+    swap(root->left, root->right);
+}
+
 int main()
 {
 	node* root = NULL;
-	int c,del,key;
+	int c,del,key,secc;
 	string keyval1 , word,sec;
 	do
 	{
-		cout<<endl<<"1. Insert word\n2. Delete word\n3. Search specific word\n4. Display dictionary (InOrder)\n5. Mirror image of dictionary\n6. Create a copy of dictionary\n7. Display dictionary level wise\n8. Exit\n9. Continuous Input :"<<endl;         
+		cout<<endl<<"1. Insert word\n2. Delete word\n3. Search specific word\n4. Search specific key\n5. Display dictionary (InOrder)\n6. Mirror image of dictionary\n7. Create a copy of dictionary\n8. Display dictionary level wise\n9. Exit"<<endl;         
 		cout<<"$ ";
 		cin>>c;
 		
@@ -301,27 +313,31 @@ int main()
 				cout<<keyval1;
 				break;
 			case 4:
+				cout<<endl<<"Enter the key you want to search : ";
+				cin>>secc;
+				keyval1 = (Searchitrative(root , secc) == true) ? "Value found using Itrative method" : "Valuse not found" ;
+				cout<<keyval1;
+				break;
+			case 5:
 				cout<<endl<<"Displaying the dictionary (InOrder): "<<endl;
 				Inorder(root);
 				break;
-			case 5:
-				cout<<"ehhh idk..";
-				break;
 			case 6:
-				cout<<"ehhh idk..";
+				mirror(root);
+				levelOrderTraversal(root);
 				break;
 			case 7:
+				cout<<"ehhh idk..";
+				break;
+			case 8:
 				cout<<endl<<"Displaying Level wise : "<<endl;
 				levelOrderTraversal(root);
 				break;
-			case 8:
+			case 9:
 				cout<<endl<<"Happy Programming"<<endl;
 				break;
-			case 9:
-				TakeInput(root);
-				break;
 		}
-	}while(c != 8);
+	}while(c != 9);
 
 	
 	return 0;
