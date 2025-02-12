@@ -14,7 +14,6 @@ dictionary should support the following operations efficiently:
 #include <iostream>
 #include <queue>
 #include <stack>
-#include <utility>
 using namespace std;
 
 struct node
@@ -28,7 +27,7 @@ struct node
 	{
 		left = NULL;
 		right = NULL;
-		this->word = word; //add this-> to avoid shadowing
+		this->word = word; //added this-> to avoid shadowing
 		this->key = key;
 	}
 };
@@ -270,8 +269,30 @@ node* DeleteNode(node* &root , int val)
 	return root;
 }
 
+
+node* copyTree(node* root) 
+{
+    if (!root) return nullptr;
+    node* newNode = new node(root->word, root->key);
+    newNode->left = copyTree(root->left);
+    newNode->right = copyTree(root->right);
+    return newNode;
+}
+
+void copyDictionary(node* root) 
+{
+    if (!root) {
+        cout << "Dictionary is empty!" << endl;
+        return;
+    }
+    node* copy = copyTree(root);
+    cout << "Copied Dictionary (Inorder Traversal):\n";
+    Inorder(copy);
+}
+
+
 void mirror(node* root) {
-    if (root == nullptr)
+    if (root == NULL)
         return ;
     
     // Invert the left and right subtree
@@ -327,7 +348,7 @@ int main()
 				levelOrderTraversal(root);
 				break;
 			case 7:
-				cout<<"ehhh idk..";
+			    copyDictionary(root);
 				break;
 			case 8:
 				cout<<endl<<"Displaying Level wise : "<<endl;
