@@ -1,81 +1,84 @@
-﻿#include <iostream>
+#include <iostream>
 using namespace std;
 
 const int MAX = 100;
-int maze[MAX][MAX], n, m;
+int maze[MAX][MAX];
 bool visited[MAX][MAX];
-int prevX[MAX][MAX], prevY[MAX][MAX];
-int dx[] = {0, 1, 0, -1}; // right, down, left, up
+int parent[MAX][MAX][2]; // To store parent cells for path tracing
+int n, m;
+
+// Directions: right, down, left, up
+int dx[] = {0, 1, 0, -1};
 int dy[] = {1, 0, -1, 0};
 
-struct QueueNode {
-        int x, y;
+// Simulating a queue
+struct Point {
+    int x, y;
 };
 
-QueueNode queue[MAX * MAX];
+Point queue[MAX * MAX];
 int front = 0, rear = 0;
 
-void enqueue(int x, int y) {
-        queue[rear].x = x;
-        queue[rear].y = y;
-        rear++;
-}
-
-QueueNode dequeue() {
-        return queue[front++];
-}
-
 bool isValid(int x, int y) {
-        return x >= 0 && x < n && y >= 0 && y < m && maze[x][y] == 0 && !visited[x][y];
+    return x >= 0 && x < n && y >= 0 && y < m &&
+           maze[x][y] == 1 && !visited[x][y];
+}
+
+void bfs(int startX, int startY) {
+    // Enqueue the starting point
+    queue[rear++] = {startX, startY};
+    visited[startX][startY] = true;
+    parent[startX][startY][0] = -1; // no parent
+    parent[startX][startY][1] = -1;
+
+    while (front < rear) {
+        Point curr = queue[front++];
+
+        if (curr.x == n - 1 && curr.y == m - 1) {
+            // Reached destination
+            return;
+        }
+
+        for (int d = 0; d < 4; d++) {
+            int nx = curr.x + dx[d];
+            int ny = curr.y + dy[d];
+
+            if (isValid(nx, ny)) {
+                visited[nx][ny] = true;
+                queue[rear++] = {nx, ny};
+                parent[nx][ny][0] = curr.x;
+                parent[nx][ny][1] = curr.y;
+            }
+        }
+    }
 }
 
 void printPath(int x, int y) {
-        if (x == -1 || y == -1) return;
-        printPath(prevX[x][y], prevY[x][y]);
-        cout << "(" << x << ", " << y << ") ";
-}
+    if (x == -1 || y == -1)
+        return;
 
-void bfs(int sx, int sy) {
-        enqueue(sx, sy);
-        visited[sx][sy] = true;
-        prevX[sx][sy] = -1;
-        prevY[sx][sy] = -1;
-
-        while (front < rear) {
-                QueueNode cur = dequeue();
-                int x = cur.x, y = cur.y;
-
-                if (x == n - 1 && y == m - 1) {
-                        cout << "Shortest path:\n";
-                        printPath(x, y);
-                        return;
-                }
-
-                for (int d = 0; d < 4; d++) {
-                        int nx = x + dx[d];
-                        int ny = y + dy[d];
-                        if (isValid(nx, ny)) {
-                                enqueue(nx, ny);
-                                visited[nx][ny] = true;
-                                prevX[nx][ny] = x;
-                                prevY[nx][ny] = y;
-                        }
-                }
-        }
-
-        cout << "No path found.\n";
+    printPath(parent[x][y][0], parent[x][y][1]);
+    cout << "(" << x << ", " << y << ") ";
 }
 
 int main() {
-        cout << "Enter maze size (rows and cols): ";
-        cin >> n >> m;
+    cout << "Enter maze dimensions (rows and columns): ";
+    cin >> n >> m;
 
-        cout << "Enter maze (0=open, 1=blocked):\n";
-        for (int i = 0; i < n; i++)
-                for (int j = 0; j < m; j++)
-                        cin >> maze[i][j];
+    cout << "Enter maze matrix (1 = open, 0 = blocked):\n";
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+            cin >> maze[i][j];
 
-        bfs(0, 0);
+    bfs(0, 0);
 
-        return 0;
+    if (visited[n - 1][m - 1]) {
+        cout << "Path found (from start to goal):\n";
+        printPath(n - 1, m - 1);
+        cout << "\n";
+    } else {
+        cout << "No path found.\n";
+    }
+
+    return 0;
 }
